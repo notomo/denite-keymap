@@ -1,0 +1,51 @@
+*denite-keymap.txt*  denite.nvim source for keymap
+
+Author: notomo
+License: MIT License (See LICENSE)
+
+
+==============================================================================
+INTRODUCTION                                       *denite-keymap-introduction*
+
+|denite-keymap| is a |denite.nvim| source for keymap.
+
+Requirements:
+- Neovim(|nvim_get_keymap()|, |nvim_buf_get_keymap()|)
+- |denite.nvim|
+
+
+==============================================================================
+SOURCE                                                   *denite-keymap-source*
+
+keymap     Gather current buffer's keymaps.
+
+        Source args:
+            0. target mode characters(see |map-modes|)
+            default uses all characters: nvoicsxl.
+            (ex. :Denite keymap:ni => normal or insert mode keymaps.)
+
+
+==============================================================================
+KIND                                                       *denite-keymap-kind*
+
+keymap      An interface to deal the keymap.
+
+            action__mode        (String)    (Required)
+                The keymap mode characters.
+
+            action__lhs         (String)    (Required)
+                The keymap lhs.
+
+                                                        *denite-keymap-actions*
+            execute (default)
+                Execute the keymap if it is normal mode keymap.
+
+            delete
+                Delete the keymap.
+
+            unmap
+                Delete the keymap.(alias to delete)
+
+
+==============================================================================
+vim:tw=78:ts=8:sw=2:ft=help:et:norl:fen:fdl=0:
