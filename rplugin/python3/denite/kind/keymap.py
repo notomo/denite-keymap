@@ -1,10 +1,11 @@
 
+import os
 import re
 
-from .base import Base
+from .file import Kind as File
 
 
-class Kind(Base):
+class Kind(File):
 
     def __init__(self, vim):
         super().__init__(vim)
@@ -24,7 +25,7 @@ class Kind(Base):
         # ex. <CR> -> \<CR>
         lhs = re.sub(
             '<(?=(.+)>)',
-            '\<',
+            '\\<',
             target['action__lhs']
         )
 
@@ -46,6 +47,55 @@ class Kind(Base):
                     )
                 )
 
+    def action_open(self, context):
+        self._open(context, 'edit')
+
+    def action_drop(self, context):
+        self._open(context, 'drop')
+
+    def action_tabopen(self, context):
+        self._open(context, 'tabedit')
+
+    def _open(self, context, cmd):
+        new_targets = []
+        # FIXME <Space>, <lt>
+        escaped = '[]=|\\(){}<>%/&$^~@?'
+        for target in context['targets']:
+            lhs = target['action__lhs']
+            path = self._get_file_path(lhs)
+            if path is None:
+                continue
+
+            pattern = '\\v\\c.*map.*{}\\s+{}'.format(
+                self.vim.call('escape', lhs, escaped),
+                self.vim.call('escape', target['action__rhs'], escaped)
+            )
+            target['action__path'] = path
+            target['action__pattern'] = pattern
+            new_targets.append(target)
+
+        context['targets'] = new_targets
+        super()._open(context, cmd)
+
     def action_unmap(self, context):
         # alias unmap=delete
         self.action_delete(context)
+
+    def _get_file_path(self, lhs):
+        cmd = 'verbose map {}'.format(lhs)
+        map_output = list(filter(
+            lambda x: x != '',
+            self.vim.call('denite_keymap#util#redir', cmd).split('\n')
+        ))
+        if len(map_output) < 2:
+            return None
+
+        paths = map_output[1].split()
+        if len(paths) == 0:
+            return None
+
+        path = os.path.expanduser(paths[-1])
+        if not os.path.isfile(path):
+            return None
+
+        return path

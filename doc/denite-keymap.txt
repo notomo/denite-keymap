@@ -46,6 +46,9 @@ keymap      An interface to deal the keymap.
             unmap
                 Delete the keymap.(alias to delete)
 
+            open, drop, tabopen
+                Open the file set the keymap last.
+
 
 ==============================================================================
 vim:tw=78:ts=8:sw=2:ft=help:et:norl:fen:fdl=0:

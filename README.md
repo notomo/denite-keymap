@@ -15,3 +15,4 @@
 ## Actions
 - delete(unmap)
 - execute(normal mode only)
+- open,drop,tabopen

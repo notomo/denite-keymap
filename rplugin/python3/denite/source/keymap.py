@@ -21,6 +21,7 @@ class Source(Base):
                 mode = 'ic'
 
             lhs = keymap['lhs'].replace(' ', '<Space>')
+            rhs = keymap['rhs']
 
             words = [
                 mode,
@@ -30,11 +31,12 @@ class Source(Base):
                 '<buffer>' if keymap['buffer'] != 0 else False,
                 '<expr>' if keymap['expr'] == 1 else False,
                 lhs,
-                keymap['rhs'] if keymap['rhs'] != '' else '<Nop>',
+                rhs if rhs != '' else '<Nop>',
             ]
             return {
                 'word': ' '.join([w for w in words if w is not False]),
                 'action__lhs': lhs,
+                'action__rhs': rhs,
                 'action__mode': mode,
             }
 
