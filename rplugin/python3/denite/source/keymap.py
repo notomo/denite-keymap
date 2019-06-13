@@ -19,6 +19,9 @@ class Source(Base):
                 mode = 'nov'
             elif mode == '!':
                 mode = 'ic'
+            elif mode == '':
+                # HACk
+                mode = 't'
 
             lhs = keymap['lhs'].replace(' ', '<Space>')
             rhs = keymap['rhs']
@@ -43,7 +46,7 @@ class Source(Base):
         modes = (
             context['args'][0]
             if len(context['args']) > 0
-            else 'nvoicsxl'
+            else 'nvoicsxlt'
         )
         keymaps = []
         extend = keymaps.extend
