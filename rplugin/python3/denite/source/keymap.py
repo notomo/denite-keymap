@@ -19,9 +19,6 @@ class Source(Base):
                 mode = 'nov'
             elif mode == '!':
                 mode = 'ic'
-            elif mode == '':
-                # HACk
-                mode = 't'
 
             lhs = keymap['lhs'].replace(' ', '<Space>')
             rhs = keymap['rhs']
