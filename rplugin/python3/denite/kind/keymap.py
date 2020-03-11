@@ -51,7 +51,7 @@ class Kind(File):
         escaped = "[]=|\\(){}<>%/&$^~@?"
         for target in context["targets"]:
             lhs = target["action__lhs"]
-            path = self._get_file_path(lhs)
+            path, line = self._get_file_path(lhs)
             if path is None:
                 continue
 
@@ -60,7 +60,10 @@ class Kind(File):
                 self.vim.call("escape", target["action__rhs"], escaped),
             )
             target["action__path"] = path
-            target["action__pattern"] = pattern
+            if line is not None:
+                target["action__line"] = line
+            else:
+                target["action__pattern"] = pattern
             new_targets.append(target)
 
         context["targets"] = new_targets
@@ -85,8 +88,10 @@ class Kind(File):
         if len(paths) == 0:
             return None
 
-        path = os.path.expanduser(paths[-1])
+        path = os.path.expanduser(paths[-3])
         if not os.path.isfile(path):
-            return None
+            return None, None
 
-        return path
+        line = int(paths[-1]) if paths[-1].isdigit() else None
+
+        return path, line
